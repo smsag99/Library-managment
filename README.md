@@ -22,7 +22,7 @@ The `getBooks()` method returns the set of unique IDs of the book copies availab
 
 The `addReader()` method allows the library to add a new reader. It requires providing the reader's name and surname (as `String` values). Reader IDs are codes assigned incrementally starting from `1000` to each new reader. The library archive accepts readers with the same name and surname and simply assigns them different IDs. 
 
-The `getReaderName()` method retrieves the name of a reader given their reader ID. It takes a reader ID as input and returns a `String` value representing their name and surname in the format `"Name Surname"`. If the ID does not exists in the archive, a `LibException` is thrown.
+The `getReaderName()` method retrieves the name of a reader given their reader ID. It takes a reader ID as input and returns a `String` value representing their name and surname in the format `"Name Surname"`. If the ID does not exist in the archive, a `LibException` is thrown.
 
 
 R2: Rentals Management

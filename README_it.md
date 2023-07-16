@@ -22,7 +22,7 @@ Il metodo `getBooks()` restituisce l'insieme (`Set<String>`) degli ID univoci de
 
 Il metodo `addReader()` permette alla libreria di aggiungere un nuovo lettore. È necessario fornire il nome e cognome del lettore (come due valori `Stringa`). Gli ID dei lettori sono codici univoci assegnati in modo incrementale a partire da `1000` a ogni nuovo lettore. L'archivio della biblioteca accetta lettori con lo stesso nome e cognome e assegna loro semplicemente ID diversi. 
 
-Il metodo `getReaderName()` ottiene il nome di un lettore dato il suo ID lettore. Prende in input l'ID del lettore e restituisce un valore `String` che rappresenta il suo nome e cognome nel formato `"Nome Cognome"`. Se l'ID non esiste nell'archivio, viene lanciata una `LibException`.
+Il metodo `getReaderName()` ottiene il nome di un lettore dato il suo ID lettore. Prende in ingresso l'ID del lettore e restituisce un valore `String` che rappresenta il suo nome e cognome nel formato `"Nome Cognome"`. Se l'ID non esiste nell'archivio, viene lanciata una `LibException`.
 
 R2: Gestione dei noleggi
 -----------
@@ -30,19 +30,19 @@ R2: Gestione dei noleggi
 I lettori possono noleggiare un solo libro alla volta. 
 
 
-Il metodo `getAvailableBook()` ottiene una copia del libro disponibile per il noleggio, se disponibile. Il metodo prende in input il titolo del libro e restituisce, come valore `String`, l'ID libro univoco della prima copia disponibile per un libro, dove le copie del libro sono ordinate per ID. Se tutte le copie sono a noleggio, viene restituito il valore `"Non disponibile"`. Se il titolo non è presente nell'archivio della biblioteca, viene lanciata una `LibException`.
+Il metodo `getAvailableBook()` ottiene una copia del libro disponibile per il noleggio, se disponibile. Il metodo prende in ingresso il titolo del libro e restituisce, come valore `String`, l'ID libro univoco della prima copia disponibile per un libro, dove le copie del libro sono ordinate per ID. Se tutte le copie sono a noleggio, viene restituito il valore `"Non disponibile"`. Se il titolo non è presente nell'archivio della biblioteca, viene lanciata una `LibException`.
 
-Il metodo `startRental()` attiva il noleggio di un libro per un lettore. Come input riceve l'ID univoco del libro, l'ID univoco del lettore e la data di inizio. Se lo stesso lettore noleggia due volte la stessa copia unica del libro, il secondo noleggio sovrascrive il primo. Se il libro o il lettore non sono registrati nell'archivio della biblioteca o se uno dei due è attualmente coinvolto in un noleggio, viene lanciata una `LibException`.
+Il metodo `startRental()` attiva il noleggio di un libro per un lettore. Come ingresso riceve l'ID univoco del libro, l'ID univoco del lettore e la data d'inizio. Se lo stesso lettore noleggia due volte la stessa copia unica del libro, il secondo noleggio sovrascrive il primo. Se il libro o il lettore non sono registrati nell'archivio della biblioteca o se uno dei due è attualmente coinvolto in un noleggio, viene lanciata una `LibException`.
 
-Il metodo `endRental()` termina il noleggio di un libro specifico per un lettore specifico. I noleggi vengono terminati definendo la loro data di fine. Questo metodo aggiorna l'elenco dei noleggi del libro e lo stato di noleggio del lettore. Come input riceve l'ID univoco del libro, l'ID univoco del lettore e la data di fine. Se il libro o il lettore non sono registrati nell'archivio della biblioteca, viene lanciata una `LibException`.
+Il metodo `endRental()` termina il noleggio di un libro specifico per un lettore specifico. I noleggi vengono terminati definendo la loro data di fine. Questo metodo aggiorna l'elenco dei noleggi del libro e lo stato di noleggio del lettore. Come ingresso riceve l'ID univoco del libro, l'ID univoco del lettore e la data di fine. Se il libro o il lettore non sono registrati nell'archivio della biblioteca, viene lanciata una `LibException`.
 
-Il metodo `getRentals()` ottiene l'elenco dei lettori che hanno noleggiato un libro specifico. Prende in input l'ID univoco del libro e restituisce la mappa (come `SortedMap<String, String>`) degli ID univoci dei lettori collegati ai noleggi (che sono valori `String` nel formato `"1000 GG-MM-AAAA GG-MM-AAAA"`). Se un noleggio è in corso, viene riportata solo la data di inizio e la parola `"ONGOING"` al posto della data di fine (nel formato `"1000 GG-MM-AAAA ONGOING"`).
+Il metodo `getRentals()` ottiene l'elenco dei lettori che hanno noleggiato un libro specifico. Prende in ingresso l'ID univoco del libro e restituisce la mappa (come `SortedMap<String, String>`) degli ID univoci dei lettori collegati ai noleggi (che sono valori `String` nel formato `"1000 GG-MM-AAAA GG-MM-AAAA"`). Se un noleggio è in corso, viene riportata solo la data d'inizio e la parola `"ONGOING"` al posto della data di fine (nel formato `"1000 GG-MM-AAAA ONGOING"`).
 
 
 R3: Donazioni di libri
 ----------------
 
-Il metodo `receiveDonation()` raccoglie i libri donati alla biblioteca. Prende in input un elenco di titoli di libri (come un unico valore `Stringa` nel formato `"Primo titolo,Secondo titolo"`; i titoli contengono parole separate solo da `" "`). Questo metodo aggiunge i titoli ricevuti all'archivio della biblioteca. 
+Il metodo `receiveDonation()` raccoglie i libri donati alla biblioteca. Prende in ingresso un elenco di titoli di libri (come un unico valore `Stringa` nel formato `"Primo titolo,Secondo titolo"`; i titoli contengono parole separate solo da `" "`). Questo metodo aggiunge i titoli ricevuti all'archivio della biblioteca. 
 
 
 R4: Gestione dell'archivio

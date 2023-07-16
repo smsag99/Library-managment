@@ -27,7 +27,6 @@ public class LibraryManager {
 	 * sorted alphabetically, each one linked to the
 	 * number of copies available for that title.
 	 * 
-	 * @param title the title of the added book
 	 * @return a map of the titles liked to the number of available copies
 	 */
     public SortedMap<String, Integer> getTitles() {    	
@@ -37,8 +36,7 @@ public class LibraryManager {
     /**
 	 * Returns the books available in the library
 	 * 
-	 * @param title the title of the added book
-	 * @return a map of the titles liked to the number of available copies
+	 * @return a set of the titles liked to the number of available copies
 	 */
     public Set<String> getBooks() {    	    	
         return null;
@@ -59,7 +57,7 @@ public class LibraryManager {
 	 * 
 	 * @param readerID the unique reader ID
 	 * @return the reader name
-	 * @throw an exception if the readerID is not present in the archive
+	 * @throws LibException if the readerID is not present in the archive
 	 */
     public String getReaderName(String readerID) throws LibException {
         return null;
@@ -74,7 +72,7 @@ public class LibraryManager {
 	 * 
 	 * @param bookTitle the title of the book
 	 * @return the unique book ID of a copy of the book or the message "Not available"
-	 * @throw an exception if the book is not present in the archive
+	 * @throws LibException  an exception if the book is not present in the archive
 	 */
     public String getAvailableBook(String bookTitle) throws LibException {
         return null;
@@ -86,7 +84,7 @@ public class LibraryManager {
 	 * @param bookID the unique book ID of the book copy
 	 * @param readerID the unique reader ID of the reader
 	 * @param startingDate the starting date of the rental
-	 * @throw an exception if the book copy or the reader are not present in the archive,
+	 * @throws LibException  an exception if the book copy or the reader are not present in the archive,
 	 * if the reader is already renting a book, or if the book copy is already rented
 	 */
 	public void startRental(String bookID, String readerID, String startingDate) throws LibException {
@@ -98,7 +96,7 @@ public class LibraryManager {
 	 * @param bookID the unique book ID of the book copy
 	 * @param readerID the unique reader ID of the reader
 	 * @param endingDate the ending date of the rental
-	 * @throw an exception if the book copy or the reader are not present in the archive,
+	 * @throws LibException  an exception if the book copy or the reader are not present in the archive,
 	 * if the reader is not renting a book, or if the book copy is not rented
 	 */
     public void endRental(String bookID, String readerID, String endingDate) throws LibException {
@@ -111,7 +109,7 @@ public class LibraryManager {
 	* 
 	* @param bookID the unique book ID of the book copy
 	* @return the map linking reader IDs with rentals starting and ending dates
-	* @throw an exception if the book copy or the reader are not present in the archive,
+	* @throws LibException  an exception if the book copy or the reader are not present in the archive,
 	* if the reader is not renting a book, or if the book copy is not rented
 	*/
     public SortedMap<String, String> getRentals(String bookID) throws LibException {
@@ -124,7 +122,7 @@ public class LibraryManager {
     /**
 	* Collects books donated to the library.
 	* 
-	* @param titles It takes in input book titles in the format "First title,Second title"
+	* @param donatedTitles It takes in input book titles in the format "First title,Second title"
 	*/
     public void receiveDonation(String donatedTitles) {
     }
