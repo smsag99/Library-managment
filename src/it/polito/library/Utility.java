@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class Utility {
     public static SortedMap<String, Integer> bookCounter(List<Book> books) {
-        SortedMap<String, Integer> sortedCount = new TreeMap<>();
+        SortedMap<String, Integer>  sortedCount = new TreeMap<>();
         for (Book book : books) {
             String title = book.getTitle();
             sortedCount.put(title, sortedCount.getOrDefault(title, 0) + 1);

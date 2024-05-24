@@ -1,6 +1,7 @@
 package it.polito.library;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,14 +10,16 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import it.polito.library.Book;
 
 public class LibraryManager {
 
 	private int booksCountID = 999;
 	private int readersCountID = 999;
-	private List<Book> books = new ArrayList<>();
-	private List<Reader> readers = new ArrayList<>();
-
+	protected static List<Book> books = new ArrayList<>();
+	protected static List<Reader> readers = new ArrayList<>();
+	protected static List<Rental> rentals = new ArrayList<>();
+	protected static SortedMap<String, Integer> uniqueBooks = new TreeMap<>();
 	// R1: Readers and Books
 
 	/**
@@ -29,6 +32,8 @@ public class LibraryManager {
 	 * @return the ID of the book added
 	 */
 	public String addBook(String title) {
+		if (!books.stream().anyMatch(item -> item.getTitle().equals(title)))
+			uniqueBooks.put(title, 0);
 		booksCountID++;
 		Book book = new Book(booksCountID, title);
 		books.add(book);
@@ -68,7 +73,7 @@ public class LibraryManager {
 	 */
 	public void addReader(String name, String surname) {
 		readersCountID++;
-		Reader reader = new Reader(readersCountID, name,surname);
+		Reader reader = new Reader(readersCountID, name, surname);
 		readers.add(reader);
 	}
 
@@ -81,7 +86,8 @@ public class LibraryManager {
 	 */
 	public String getReaderName(String readerID) throws LibException {
 		try {
-			List<Reader> singleReader = readers.stream().filter(item-> item.getId() == Integer.parseInt(readerID)).collect(Collectors.toList());
+			List<Reader> singleReader = readers.stream().filter(item -> item.getId() == Integer.parseInt(readerID))
+					.collect(Collectors.toList());
 			return singleReader.get(0).getName() + " " + singleReader.get(0).getSurname();
 		} catch (Exception e) {
 			throw new LibException("");
@@ -100,10 +106,12 @@ public class LibraryManager {
 	 */
 	public String getAvailableBook(String bookTitle) throws LibException {
 		try {
-			List<Book> availableBooks = books.stream().filter(item-> item.getTitle().equals(bookTitle)).collect(Collectors.toList());
-			return availableBooks.get(0).getId()+"";
+			List<Book> availableBooks = books.stream()
+					.filter(item -> item.getTitle().equals(bookTitle) & !(item.isRented()))
+					.collect(Collectors.toList());
+			return availableBooks.get(0).getId() + "";
 		} catch (Exception e) {
-			throw new LibException("");
+			return "Not available";
 		}
 	}
 
@@ -119,7 +127,12 @@ public class LibraryManager {
 	 *                      copy is already rented
 	 */
 	public void startRental(String bookID, String readerID, String startingDate) throws LibException {
-		
+		try {
+			Rental rental = new Rental(bookID, readerID, startingDate);
+			rentals.add(rental);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -134,6 +147,13 @@ public class LibraryManager {
 	 *                      is not rented
 	 */
 	public void endRental(String bookID, String readerID, String endingDate) throws LibException {
+		try {
+			Rental rental = rentals.stream().filter(item -> item.getBookID().equals(bookID) & item.stillRented())
+					.collect(Collectors.toList()).get(0);
+			rental.setEndDate(bookID, readerID, endingDate);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -149,7 +169,14 @@ public class LibraryManager {
 	 *                      is not rented
 	 */
 	public SortedMap<String, String> getRentals(String bookID) throws LibException {
-		return null;
+		SortedMap<String, String> bookRentals = new TreeMap<>();
+
+		for (Rental rental : rentals) {
+			if (rental.getBookID().equals(bookID)) {
+				bookRentals.put(rental.getReaderID(), rental.getStartDate() + " " + rental.getEndDate());
+			}
+		}
+		return bookRentals;
 	}
 
 	// R3: Book Donations
@@ -161,6 +188,11 @@ public class LibraryManager {
 	 *                      title,Second title"
 	 */
 	public void receiveDonation(String donatedTitles) {
+		String[] donatedList = donatedTitles.split(",");
+		for (String title : donatedList) {
+			addBook(title);
+		}
+
 	}
 
 	// R4: Archive Management
@@ -172,7 +204,15 @@ public class LibraryManager {
 	 * 
 	 */
 	public Map<String, String> getOngoingRentals() {
-		return null;
+		SortedMap<String, String> activeRentals = new TreeMap<>();
+
+		for (Rental rental : rentals) {
+			if (rental.stillRented()) {
+				activeRentals.put(rental.getReaderID(), rental.getBookID());
+			}
+		}
+		return activeRentals;
+
 	}
 
 	/**
@@ -181,6 +221,29 @@ public class LibraryManager {
 	 * 
 	 */
 	public void removeBooks() {
+		// remove copies
+		List<Book> bookCopies;
+		Map<String, Integer> Duplicate = Utility.bookCounter(books).entrySet().stream()
+				.filter(item -> item.getValue() > Integer.valueOf(1))
+				.collect(Collectors.toMap(i -> i.getKey(), i -> i.getValue()));
+		for (Map.Entry<String, Integer> entry : Duplicate.entrySet()) {
+			bookCopies = books.stream().filter(item -> item.getTitle().equals(entry.getKey()))
+					.collect(Collectors.toList());
+
+			for (int i = 1; i < entry.getValue(); i++) {
+				books.remove(bookCopies.get(i));
+			}
+		}
+		// remove zero rented books
+		Book bookToRemove;
+		List<String> zeroRentBooks = LibraryManager.uniqueBooks.entrySet().stream()
+				.filter(item -> item.getValue() == Integer.valueOf(0)).map(item -> item.getKey())
+				.collect(Collectors.toList());
+		for (String item : zeroRentBooks) {
+			bookToRemove = books.stream().filter(i -> i.getTitle().equals(item)).findFirst().get();
+			uniqueBooks.remove(item);
+			LibraryManager.books.remove(bookToRemove);
+		}
 	}
 
 	// R5: Stats
@@ -192,7 +255,7 @@ public class LibraryManager {
 	 * @return the uniqueID of the reader with the highest number of rentals
 	 */
 	public String findBookWorm() {
-		return null;
+		return readers.stream().max(Comparator.comparing(Reader::getNumRented)).map(item->item.getId()).get()+"";
 	}
 
 	/**
@@ -201,7 +264,7 @@ public class LibraryManager {
 	 * @return the map linking a title with the number of rentals
 	 */
 	public Map<String, Integer> rentalCounts() {
-		return null;
+		return uniqueBooks;
 	}
 
 }

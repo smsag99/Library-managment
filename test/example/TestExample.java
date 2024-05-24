@@ -61,7 +61,7 @@ public class TestExample {
 	    // R3: Book Donations
 	    
 	    lib.receiveDonation("Beauty and the Beast,Cindarella,Snowhite");
-	    
+		titles = lib.getTitles();
 	    assertEquals(6, titles.size());
 	    Set<String> books = lib.getBooks();
 
@@ -90,7 +90,8 @@ public class TestExample {
 	    lib.endRental("1001", "1001", "19-07-2021");
 
 	    assertEquals(10, books.size());
-	    lib.removeBooks();
+		lib.removeBooks();
+		books = lib.getBooks();
 	    assertEquals(2, books.size());
 	    
 	    
