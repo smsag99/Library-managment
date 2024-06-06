@@ -209,7 +209,7 @@ public class LibraryManager {
 		for (Rental rental : rentals) {
 			if (rental.stillRented()) {
 				activeRentals.put(rental.getReaderID(), rental.getBookID());
-			}
+			}						
 		}
 		return activeRentals;
 
